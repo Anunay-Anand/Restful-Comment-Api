@@ -10,6 +10,9 @@ const app = express();
 //Fetch UUID package installed by NPM for index
 const {v4: uuid} = require('uuid');
 
+//Fetch Method Override package
+const methodOverride = require('method-override');
+
 //Serving our static files
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -46,6 +49,8 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(express.json());
+//method override syntax _method is query string
+app.use(methodOverride('_method'))
 
 //Index or home route
 app.get('/comments', (req, res) => {
@@ -72,6 +77,27 @@ app.post('/comments', (req, res) => {
         id: uuid()
     });
     //redirect user to the home or index url
+    res.redirect('/comments');
+});
+
+//Updating form + part of update route(Edit Route)
+
+app.get('/comments/:id/edit', (req, res) => {
+    const { id } = req.params;
+    const comment = comments.find(c => c.id === id);
+    res.render('comments/edit', {comment: comment});
+});
+
+//Update Route
+app.patch('/comments/:id/', (req, res) => {
+    const { id } = req.params;
+    //fetch the new comment from req body
+    const newCommentText = req.body.comment;
+    //select the comment to update
+    const foundComment = comments.find( c => c.id === id);
+    //Update the comment
+    foundComment.comment = newCommentText;
+    //Redirect to home/index
     res.redirect('/comments');
 });
 

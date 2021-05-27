@@ -2,4 +2,5 @@
 <h1>Comment id: <%= comment.id %></h1>
 <p><b><%= comment.comment %> - <%= comment.username %></b></p>
 <a href="/comments">Back to Index</a>
+<a href="/comments/<%=comment.id%>/edit">Edit Comment</a>
 <% include('../partials/footer.ejs') %>
