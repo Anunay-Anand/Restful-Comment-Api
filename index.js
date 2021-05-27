@@ -8,12 +8,11 @@ const path = require('path');
 const app = express();
 
 //Setting our view engine
-app.set('views',path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 //Creating our comment resource
-const comments = [
-    {
+const comments = [{
         username: 'Todd',
         comment: 'lol that is so funny'
     },
@@ -31,9 +30,17 @@ const comments = [
     },
 ]
 
+//Creating Restful routes
+
+app.get('/comments', (req, res) => {
+    res.render('comments/index.ejs', {comments: comments});
+});
+
 //Routing for get and post
 //Parsing the incoming data as form as well as json data
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({
+    extended: true
+}));
 app.use(express.json());
 
 app.get('/tacos', (req, res) => {
@@ -41,9 +48,14 @@ app.get('/tacos', (req, res) => {
 });
 
 app.post('/tacos', (req, res) => {
-    app.use(express.urlencoded({extended: true}));
+    app.use(express.urlencoded({
+        extended: true
+    }));
     //Destructuring thr form body to get object values
-    const {meat, qty: quantity = qty} = req.body;
+    const {
+        meat,
+        qty: quantity = qty
+    } = req.body;
     res.send(`We received the meat ${meat} you want. ${quantity} is available.`);
 });
 
