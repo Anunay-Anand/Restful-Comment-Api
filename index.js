@@ -7,6 +7,9 @@ const path = require('path');
 //Now fetch/excute express methods in app as covention
 const app = express();
 
+//Serving our static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 //Setting our view engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -30,12 +33,6 @@ const comments = [{
     },
 ]
 
-//Creating Restful routes
-
-app.get('/comments', (req, res) => {
-    res.render('comments/index.ejs', {comments: comments});
-});
-
 //Routing for get and post
 //Parsing the incoming data as form as well as json data
 app.use(express.urlencoded({
@@ -43,21 +40,38 @@ app.use(express.urlencoded({
 }));
 app.use(express.json());
 
-app.get('/tacos', (req, res) => {
-    res.send("get /tacos response");
+app.get('/comments', (req, res) => {
+    res.render('comments/index.ejs', {
+        comments: comments
+    });
 });
 
-app.post('/tacos', (req, res) => {
-    app.use(express.urlencoded({
-        extended: true
-    }));
-    //Destructuring thr form body to get object values
-    const {
-        meat,
-        qty: quantity = qty
-    } = req.body;
-    res.send(`We received the meat ${meat} you want. ${quantity} is available.`);
+app.get('/comments/new', (req, res) => {
+    res.render('comments/new.ejs');
 });
+
+app.post('/comments', (req, res) => {
+    const {username, comment} = req.body;
+    //Update your comment database before rendering
+    comments.push({username: username, comment: comment});
+    res.send('It worked');
+});
+
+// app.get('/tacos', (req, res) => {
+//     res.send("get /tacos response");
+// });
+
+// app.post('/tacos', (req, res) => {
+//     app.use(express.urlencoded({
+//         extended: true
+//     }));
+//     //Destructuring thr form body to get object values
+//     const {
+//         meat,
+//         qty: quantity = qty
+//     } = req.body;
+//     res.send(`We received the meat ${meat} you want. ${quantity} is available.`);
+// });
 
 
 //Start the server 
