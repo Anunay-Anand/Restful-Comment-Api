@@ -7,6 +7,9 @@ const path = require('path');
 //Now fetch/excute express methods in app as covention
 const app = express();
 
+//Fetch UUID package installed by NPM for index
+const {v4: uuid} = require('uuid');
+
 //Serving our static files
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -16,22 +19,22 @@ app.set('view engine', 'ejs');
 
 //Creating our comment resource
 const comments = [{
-        id: 1,
+        id: uuid(),
         username: 'Todd',
         comment: 'lol that is so funny'
     },
     {
-        id: 2,
+        id: uuid(),
         username: 'Skyler',
         comment: 'we will fly in the sky'
     },
     {
-        id: 3,
+        id: uuid(),
         username: 'Anunay',
         comment: 'Thak gya hu Bro!'
     },
     {
-        id: 4,
+        id: uuid(),
         username: 'coolDude69',
         comment: 'Mai sirf tumse baat karta hu!'
     },
@@ -65,7 +68,8 @@ app.post('/comments', (req, res) => {
     //Update your comment database before rendering
     comments.push({
         username: username,
-        comment: comment
+        comment: comment,
+        id: uuid()
     });
     //redirect user to the home or index url
     res.redirect('/comments');
@@ -77,8 +81,8 @@ app.get('/comments/:id', (req, res) => {
         id
     } = req.params;
     //Find the comment in the database using ID
-    const comment = comments.find( c => c.id === parseInt(id));
-    
+    const comment = comments.find( c => c.id === id);
+    res.render('comments/show.ejs', {comment: comment});
 });
 
 // app.get('/tacos', (req, res) => {

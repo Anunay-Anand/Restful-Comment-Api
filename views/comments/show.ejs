@@ -1,3 +1,5 @@
 <%- include('../partials/header.ejs') %>
-
+<h1>Comment id: <%= comment.id %></h1>
+<p><b><%= comment.comment %> - <%= comment.username %></b></p>
+<a href="/comments">Back to Index</a>
 <% include('../partials/footer.ejs') %>
