@@ -21,7 +21,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 //Creating our comment resource
-const comments = [{
+let comments = [{
         id: uuid(),
         username: 'Todd',
         comment: 'lol that is so funny'
@@ -101,6 +101,16 @@ app.patch('/comments/:id/', (req, res) => {
     res.redirect('/comments');
 });
 
+//Delete/Destroy Route
+
+app.delete('/comments/:id', (req, res) => {
+    const {id} = req.params;
+    //We will use array filter method to delete comment
+    comments = comments.filter( c => c.id !== id);
+    //Redirect back to home
+    res.redirect('/comments');
+});
+
 //Show route
 app.get('/comments/:id', (req, res) => {
     const {
@@ -110,6 +120,7 @@ app.get('/comments/:id', (req, res) => {
     const comment = comments.find( c => c.id === id);
     res.render('comments/show.ejs', {comment: comment});
 });
+
 
 // app.get('/tacos', (req, res) => {
 //     res.send("get /tacos response");
